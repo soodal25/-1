@@ -1,154 +1,124 @@
-import streamlit as st
 import time
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
+import matplotlib.font_manager as fm
 import matplotlib as mpl
-import matplotlib.font_manager as fm 
+import matplotlib.pyplot as plt
+font_path = "C:/Windows/Fonts/malgun.ttf"
 
-if 'running' not in st.session_state:
-    st.session_state.running = False
-if 'start_time' not in st.session_state:
-    st.session_state.start_time = 0.0
-if 'total_elapsed_sec' not in st.session_state:
-    st.session_state.total_elapsed_sec = 0.0
+fontprop = fm.FontProperties(fname=font_path)
+mpl.rc('font', family=fontprop.get_name())
 
-def start_stop_timer():
-    if st.session_state.running:
-        st.session_state.running = False
-        duration = time.time() - st.session_state.start_time
-        st.session_state.total_elapsed_sec += duration
-    else:
-        st.session_state.running = True
-        st.session_state.start_time = time.time()
 
-def reset_timer():
-    st.session_state.running = False
-    st.session_state.total_elapsed_sec = 0.0
-    st.session_state.start_time = 0.0
+fig, axs = plt.subplots(1, 2, figsize=(10, 5))
 
-st.title("수학과 코딩을 결합한 스터디 플래너")
-st.markdown("---")
+print("오늘 공부할 과목의 수를 입력하세요:")
+labels2 = []
+sizes2 = []
+subjects = int(input())
 
-daily_goal = st.text_input("일일 목표 공부량을 입력하세요 (분):", value="60")
-try:
-    goal = int(daily_goal)
-    goal_sec = 60 * goal
-    st.info(f"오늘의 목표 공부 시간은 **{goal}분**입니다.")
-except ValueError:
-    st.error("목표 시간은 숫자로 입력해 주세요.")
-    goal_sec = 0 # 변수 이름 goal_sec으로 통일
+for i in range(subjects):
+    subject_name = input(f"{i+1}번째 과목 이름을 입력하세요: ")
+    subject_list=[]
+    subject_list.append(subject_name)
+    percent = float(input(f"{subject_name}의 비율(%)을 입력하세요: "))
+    percent_list=[]
+    percent_list.append(percent)
+    labels2.append(subject_name)
+    sizes2.append(percent)
 
-col1, col2 = st.columns(2)
+def make_potato(labels):
+    def my_potato(pct):
+        total = sum(sizes2)
+        value = pct * total / 100.0
+        label = labels[my_potato.index]
+        my_potato.index += 1
+        return f"{label}\n{value:.1f}%"
+    my_potato.index = 0
+    return my_potato
 
-button_label = "일시 정지 ⏸️" if st.session_state.running else "공부 시작/재개 ▶️"
-col1.button(button_label, on_click=start_stop_timer)
-col2.button("종료 및 초기화 🔄", on_click=reset_timer)
+axs[1].pie(
+    sizes2,
+    labels=labels2,
+    autopct=make_potato(labels2),
+    startangle=90
+)
+axs[1].set_title("과목별 공부 시간 비율")
+axs[1].axis('equal')
 
-if st.session_state.running:
-    current_elapsed = st.session_state.total_elapsed_sec + (time.time() - st.session_state.start_time)
-    time.sleep(1)
-    st.rerun() # st.experimental_rerun() -> st.rerun()
-else:
-    current_elapsed = st.session_state.total_elapsed_sec
+print("일일 공부량을 입력하세요(분):")
+daily_goal = input()
+total_elapsed_sec = 0
+print("오늘의 목표 공부 시간은 " + daily_goal + "분입니다.")
+print("\n공부를 시작하려면 엔터를 누르세요.")
+if input() == "":
+    print("공부를 시작합니다.")
+start_time = time.time()
 
-elapsed_sec = int(current_elapsed)
+print("공부를 잠시 멈추려면 엔터를 누르세요.")
+if input() == "":
+    print("공부를 일시정지합니다.")
+    pause_time = time.time()
+    study_duration = pause_time - start_time
+    total_elapsed_sec += study_duration
+
+    print("공부를 다시 시작하려면 엔터를 누르세요.")
+    if input() == "":
+        print("공부를 다시 시작합니다.")
+        start_time = time.time()
+
+print("공부를 종료하려면 엔터를 누르세요.")
+input()
+end_time = time.time()
+final_study_duration = end_time - start_time
+total_elapsed_sec += final_study_duration
+
+elapsed_sec = int(total_elapsed_sec)
 minutes = elapsed_sec // 60
 seconds = elapsed_sec % 60
 
-st.subheader(f"총 공부 시간: {minutes}분 {seconds}초")
-st.markdown("---")
+print("공부가 종료되었습니다.")
+print("총 공부 시간:", minutes, "분", seconds, "초")
 
-if goal_sec > 0:
-    try:
-        result = (elapsed_sec * 100) / goal_sec
-        st_result = round(result, 2)
+try:
+    goal = int(daily_goal)
+    goal_sec = 60 * goal
+    result = (elapsed_sec * 100) / goal_sec
 
-        if elapsed_sec >= goal_sec:
-            st.balloons()
-            st.success("🎉 목표 달성! 축하해요!! :)")
-        else:
-            st.warning(f"아쉽지만 목표를 달성하지 못했어요ㅠㅠ 목표 달성률은 **{st_result}%**에요.")
+    if elapsed_sec >= goal_sec:
+        print("목표 달성! 축하해요!! :)")
+    else:
+        print("아쉽지만 목표를 달성하지 못했어요ㅠㅠ 목표 달성률은", round(result, 2), "%에요.")
+except:
+    print("오류가 발생했습니다! 입력 값에 문제가 없는지 한번 더 확인해보세요.")
+index=int(subjects+1)
+if index <len(subject_list):
+    for i in range(index+1):
+        if total_elapsed_sec>=goal_sec*int(percent_list[index]):
+            print(f"{subject_list[i]} 과목 목표 달성! 축하해요!! :)")
+            
+time.sleep(5)
+st = round(result, 2)
+abels1 = ['총 공부 시간', '남은 목표 시간']
+sizes1 = [st, 100 - st]
 
-        fig, axs = plt.subplots(1, 2, figsize=(10, 5))
+def make_pumpkin(labels):
+    def my_pumpkin(pct):
+        total = sum(sizes1)
+        value = pct * total / 100.0
+        label = labels[my_pumpkin.index]
+        my_pumpkin.index += 1
+        return f"{label}\n{value:.1f}%"
+    my_pumpkin.index = 0
+    return my_pumpkin
 
-        font_path = 'MALGUN.TTF' 
-        try:
-            fontprop = fm.FontProperties(fname=font_path)
-            mpl.rc('font', family=fontprop.get_name())
-            mpl.rcParams['axes.unicode_minus'] = False
-        except Exception as e:
-            # 폰트 파일을 못 찾을 경우, 한글 깨짐을 감수하고 기본 폰트로 실행
-            mpl.rc('font', family='sans-serif')
-            st.warning(f"경고: 폰트 설정 중 오류 발생. 한글이 깨질 수 있습니다. ({e})")
-        
-        labels1 = ['총 공부 시간', '남은 목표 시간']
-        sizes1 = [st_result, max(0, 100 - st_result)]
+axs[0].pie(
+    sizes1,
+    labels=abels1,
+    autopct=make_pumpkin(abels1),
+    startangle=90
+)
+axs[0].set_title("공부 목표 달성률")
+axs[0].axis('equal')
 
-        def make_pumpkin(labels):
-            def my_pumpkin(pct):
-                total = sum(sizes1)
-                value = pct * total / 100.0
-                label = labels[my_pumpkin.index]
-                my_pumpkin.index += 1
-                return f"{label}\n{value:.1f}%"
-            my_pumpkin.index = 0
-            return my_pumpkin
-
-        axs[0].pie(
-            sizes1,
-            labels=labels1,
-            autopct=make_pumpkin(labels1),
-            startangle=90
-        )
-        axs[0].set_title("공부 목표 달성률")
-        axs[0].axis('equal')
-
-    
-        with st.sidebar:
-            st.header("과목별 비율 설정")
-            subjects = st.number_input("오늘 공부할 과목의 수를 입력하세요:", min_value=1, value=1, step=1, key="num_subjects")
-
-            labels2 = []
-            sizes2 = []
-
-            for i in range(subjects):
-                col_name, col_percent = st.columns(2)
-                subject_name = col_name.text_input(f"{i+1}번째 과목 이름:", key=f"subj_name_{i}")
-                percent = col_percent.number_input(f"비율(%) 입력:", min_value=0.0, max_value=100.0, step=0.1, key=f"subj_percent_{i}")
-
-                if subject_name and percent > 0:
-                    labels2.append(subject_name)
-                    sizes2.append(percent)
-
-  
-        if sum(sizes2) > 0:
-            def make_potato(labels):
-                def my_potato(pct):
-                    total = sum(sizes2)
-                    value = pct * total / 100.0
-                    label = labels[my_potato.index]
-                    my_potato.index += 1
-                    return f"{label}\n{value:.1f}%"
-                my_potato.index = 0
-                return my_potato
-
-            axs[1].pie(
-                sizes2,
-                labels=labels2,
-                autopct=make_potato(labels2),
-                startangle=90
-            )
-            axs[1].set_title("과목별 공부 시간 비율")
-            axs[1].axis('equal')
-        else:
-             axs[1].set_title("과목 비율 정보를 입력하세요.")
-
-        plt.tight_layout()
-        st.pyplot(fig) 
-
-    except ZeroDivisionError:
-        st.error("목표 시간을 1분 이상으로 설정해주세요.")
-    except Exception as e:
-        st.error(f"오류가 발생했습니다: {e}") 
-
+plt.tight_layout()
+plt.show()
+time.sleep(3)
