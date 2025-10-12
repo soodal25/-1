@@ -54,7 +54,8 @@ else:
 
 elapsed_sec = int(current_elapsed)
 minutes = elapsed_sec // 60
-seconds = elapsed_sec % 60요.")
+seconds = elapsed_sec % 60
     except Exception as e:
         st.error(f"오류가 발생했습니다: {e}")
+
 
