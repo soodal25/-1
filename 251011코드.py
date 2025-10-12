@@ -37,7 +37,7 @@ try:
     st.info(f"오늘의 목표 공부 시간은 **{goal}분**입니다.")
 except ValueError:
     st.error("목표 시간은 숫자로 입력해 주세요.")
-    goal_se= 0c 
+    goal_se= 0
 
 col1, col2 = st.columns(2)
 
@@ -57,3 +57,4 @@ minutes = elapsed_sec // 60
 seconds = elapsed_sec % 60요.")
     except Exception as e:
         st.error(f"오류가 발생했습니다: {e}")
+
