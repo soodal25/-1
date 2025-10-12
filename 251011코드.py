@@ -71,13 +71,11 @@ if goal_sec > 0:
             st.warning(f"아쉽지만 목표를 달성하지 못했어요ㅠㅠ 목표 달성률은 **{st_result}%**에요.")
 
         fig, axs = plt.subplots(1, 2, figsize=(10, 5))
+
+        font_path = "C:/Windows/Fonts/malgun.ttf"
+        fontprop = fm.FontProperties(fname=font_path)
+        mpl.rc('font', family=fontprop.get_name())
         
-        # 폰트 설정 (웹 환경에서는 시스템 폰트 사용하도록 주석 처리)
-        # font_path = "C:/Windows/Fonts/malgun.ttf"
-        # fontprop = fm.FontProperties(fname=font_path)
-        # mpl.rc('font', family=fontprop.get_name())
-        
-        # 공부 목표 달성률 파이 차트
         labels1 = ['총 공부 시간', '남은 목표 시간']
         sizes1 = [st_result, max(0, 100 - st_result)] 
 
@@ -146,3 +144,4 @@ if goal_sec > 0:
     except Exception as e:
 
         st.error(f"오류가 발생했습니다: {e}")
+
