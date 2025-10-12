@@ -4,10 +4,9 @@ import matplotlib.font_manager as fm
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
+
 if 'is_running' not in st.session_state:
     st.session_state.is_running = False
-if 'paused_duration' not in st.session_state:
-    st.session_state.paused_duration = 0.0
 if 'start_time' not in st.session_state:
     st.session_state.start_time = 0.0
 if 'total_elapsed_sec' not in st.session_state:
@@ -25,52 +24,56 @@ if 'labels2' not in st.session_state:
 if 'sizes2' not in st.session_state:
     st.session_state.sizes2 = []
 
+
 try:
-    font_path = "C:/Windows/Fonts/malgun.ttf"
-    fontprop = fm.FontProperties(fname=font_path)
-    mpl.rc('font', family=fontprop.get_name())
-except Exception:
-    mpl.rc('font', family='sans-serif')
+    font_name = fm.findfont('NanumGothic')
+    mpl.rc('font', family='NanumGothic')
+except:
+    try:
+        font_name = fm.findfont('Malgun Gothic')
+        mpl.rc('font', family='Malgun Gothic')
+    except:
+        mpl.rc('font', family='sans-serif')
+
 finally:
     mpl.rcParams['axes.unicode_minus'] = False
 
-def update_subject_time(elapsed_time):
+def update_subject_time(time_spent):
     if st.session_state.current_subject:
         subj = st.session_state.current_subject
-        st.session_state.subject_times[subj] = st.session_state.subject_times.get(subj, 0.0) + elapsed_time
+        st.session_state.subject_times[subj] = st.session_state.subject_times.get(subj, 0.0) + time_spent
 
 def start_stop_timer():
     selected_subject = st.session_state.subject_selector
 
     if st.session_state.is_running:
-
-        if st.session_state.current_subject:
-            time_spent = time.time() - st.session_state.start_time
-            update_subject_time(time_spent)
-            st.session_state.total_elapsed_sec += time_spent
-
+        time_spent = time.time() - st.session_state.start_time
+        
+        update_subject_time(time_spent)
+        st.session_state.total_elapsed_sec += time_spent
+        
         st.session_state.is_running = False
         st.session_state.current_subject = None
     else:
-        if not selected_subject:
+        if not selected_subject or selected_subject == "(과목 선택)":
              st.warning("공부를 시작하려면 먼저 과목을 선택해주세요.")
              return
-
+             
         st.session_state.is_running = True
         st.session_state.start_time = time.time()
         st.session_state.current_subject = selected_subject
 
 def reset_timer():
     st.session_state.is_running = False
-    st.session_state.paused_duration = 0.0
     st.session_state.start_time = 0.0
     st.session_state.notified_subjects = set()
     st.session_state.total_elapsed_sec = 0.0
+    st.session_state.subject_times = {} 
+    st.session_state.current_subject = None
     st.session_state.goal_sec = 0
     st.session_state.labels2 = []
     st.session_state.sizes2 = []
-    st.session_state.subject_times = {} 
-    st.session_state.current_subject = None
+
 
 st.title("📚 과목별 측정 스터디 플래너")
 st.markdown("---")
@@ -80,34 +83,28 @@ st.session_state.goal_sec = 60 * daily_goal
 
 col_selector, col_start, col_reset = st.columns([2, 1, 1])
 
-
 subject_options = ["(과목 선택)"] + st.session_state.labels2
 selected_subject_name = col_selector.selectbox("현재 공부할 과목:", options=subject_options, key="subject_selector")
 
-button_label = f"현재 과목 중지 ⏸️" if st.session_state.is_running else f"{selected_subject_name} 시작 ▶️"
+button_label = f"중지 ⏸️" if st.session_state.is_running else f"시작 ▶️"
 col_start.button(button_label, on_click=start_stop_timer)
 col_reset.button("전체 초기화 🔄", on_click=reset_timer)
 
 if st.session_state.is_running:
-    
-
     time_spent_since_start = time.time() - st.session_state.start_time
-    
-    current_subject_time_update = time_spent_since_start 
+    time_to_add = 1.0 
     
 
-    subj = st.session_state.current_subject
-    st.session_state.subject_times[subj] = st.session_state.subject_times.get(subj, 0.0) + current_subject_time_update
-
-    st.session_state.total_elapsed_sec += current_subject_time_update
+    update_subject_time(time_to_add)
     
- 
+
+    st.session_state.total_elapsed_sec += time_to_add
+    
+
     st.session_state.start_time = time.time()
-    
-   
-    time.sleep(1)
-    st.rerun()
 
+    time.sleep(1)
+    st.rerun() 
 
 elapsed_sec = int(st.session_state.total_elapsed_sec)
 minutes = elapsed_sec // 60
@@ -116,16 +113,15 @@ seconds = elapsed_sec % 60
 st.subheader(f"⏱️ 총 공부 시간: {minutes}분 {seconds}초")
 
 
+subject_time_data = []
 if st.session_state.subject_times:
     st.markdown("### 과목별 누적 시간")
-    subject_time_data = []
     for subj, sec in st.session_state.subject_times.items():
         if sec > 0:
             sub_min = int(sec) // 60
             sub_sec = int(sec) % 60
             st.write(f"- **{subj}**: {sub_min}분 {sub_sec}초")
-            subject_time_data.append((subj, sec))
-
+            subject_time_data.append((subj, sec)) 
 
 
 with st.sidebar:
@@ -148,7 +144,6 @@ with st.sidebar:
     st.session_state.sizes2 = current_sizes2
 
 
-subject_goal_times = []
 labels2 = st.session_state.labels2
 sizes2 = st.session_state.sizes2
 goal_sec = st.session_state.goal_sec
@@ -163,7 +158,7 @@ if st.session_state.is_running and len(labels2) > 0:
         subject_current_time = st.session_state.subject_times.get(label, 0.0)
         if i < len(subject_goal_times) and subject_current_time >= subject_goal_times[i] and label not in st.session_state.notified_subjects:
             st.toast(f" {label} 과목 목표 시간 도달! 축하해요!! 🎉", icon='🎉')
-            st.session_state.notified_subjects.add(label) # set에 레이블 추가
+            st.session_state.notified_subjects.add(label) 
 
 
 if goal_sec > 0:
@@ -177,6 +172,7 @@ if goal_sec > 0:
         st.info(f"아쉽지만 총 목표를 달성하지 못했어요. 달성률은 **{st_result}%**에요.")
 
     fig, axs = plt.subplots(1, 2, figsize=(10, 5))
+
 
     plot_st = min(st_result, 100)
     labels1 = ['총 공부 시간', '남은 목표 시간']
@@ -200,7 +196,7 @@ if goal_sec > 0:
     axs[0].set_title("총 공부 목표 달성률")
     axs[0].axis('equal')
 
-  
+ 
     actual_labels = [item[0] for item in subject_time_data]
     actual_times = [item[1] for item in subject_time_data]
 
