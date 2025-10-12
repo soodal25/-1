@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
+import matplotlib.font_manager as fm
 
 if 'running' not in st.session_state:
     st.session_state.running = False
@@ -144,4 +145,5 @@ if goal_sec > 0:
     except Exception as e:
 
         st.error(f"오류가 발생했습니다: {e}")
+
 
