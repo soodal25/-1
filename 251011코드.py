@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
-import matplotlib.font_manager as fm # 폰트 관리를 위해 추가
+import matplotlib.font_manager as fm 
 
 if 'running' not in st.session_state:
     st.session_state.running = False
@@ -30,7 +30,6 @@ def reset_timer():
 st.title("수학과 코딩을 결합한 스터디 플래너")
 st.markdown("---")
 
-# 1. 목표 시간 입력
 daily_goal = st.text_input("일일 목표 공부량을 입력하세요 (분):", value="60")
 try:
     goal = int(daily_goal)
@@ -40,7 +39,6 @@ except ValueError:
     st.error("목표 시간은 숫자로 입력해 주세요.")
     goal_sec = 0 # 변수 이름 goal_sec으로 통일
 
-# 2. 타이머 위젯 및 로직
 col1, col2 = st.columns(2)
 
 button_label = "일시 정지 ⏸️" if st.session_state.running else "공부 시작/재개 ▶️"
@@ -61,7 +59,6 @@ seconds = elapsed_sec % 60
 st.subheader(f"총 공부 시간: {minutes}분 {seconds}초")
 st.markdown("---")
 
-# 3. 목표 달성률 계산 및 그래프 로직
 if goal_sec > 0:
     try:
         result = (elapsed_sec * 100) / goal_sec
@@ -75,8 +72,7 @@ if goal_sec > 0:
 
         fig, axs = plt.subplots(1, 2, figsize=(10, 5))
 
-        # --- 폰트 설정 부분: GitHub 파일 이름을 사용합니다. ---
-        font_path = 'MALGUN.TTF'  # GitHub에 올린 폰트 파일 이름
+        font_path = 'MALGUN.TTF' 
         try:
             fontprop = fm.FontProperties(fname=font_path)
             mpl.rc('font', family=fontprop.get_name())
@@ -85,10 +81,8 @@ if goal_sec > 0:
             # 폰트 파일을 못 찾을 경우, 한글 깨짐을 감수하고 기본 폰트로 실행
             mpl.rc('font', family='sans-serif')
             st.warning(f"경고: 폰트 설정 중 오류 발생. 한글이 깨질 수 있습니다. ({e})")
-        # -----------------------------------------------------------
         
-        # 공부 목표 달성률 파이 차트
-        labels1 = ['총 공부 시간', '남은 목표 시간'] # <--- 이 부분부터 누락된 로직입니다.
+        labels1 = ['총 공부 시간', '남은 목표 시간']
         sizes1 = [st_result, max(0, 100 - st_result)]
 
         def make_pumpkin(labels):
@@ -110,7 +104,7 @@ if goal_sec > 0:
         axs[0].set_title("공부 목표 달성률")
         axs[0].axis('equal')
 
-        # 4. 과목별 비율 입력 (사이드바 사용)
+    
         with st.sidebar:
             st.header("과목별 비율 설정")
             subjects = st.number_input("오늘 공부할 과목의 수를 입력하세요:", min_value=1, value=1, step=1, key="num_subjects")
@@ -127,7 +121,7 @@ if goal_sec > 0:
                     labels2.append(subject_name)
                     sizes2.append(percent)
 
-        # 과목별 공부 시간 비율 파이 차트
+  
         if sum(sizes2) > 0:
             def make_potato(labels):
                 def my_potato(pct):
@@ -151,9 +145,10 @@ if goal_sec > 0:
              axs[1].set_title("과목 비율 정보를 입력하세요.")
 
         plt.tight_layout()
-        st.pyplot(fig) # 그래프를 화면에 표시
+        st.pyplot(fig) 
 
     except ZeroDivisionError:
         st.error("목표 시간을 1분 이상으로 설정해주세요.")
     except Exception as e:
-        st.error(f"오류가 발생했습니다: {e}") # <--- try 블록의 끝
+        st.error(f"오류가 발생했습니다: {e}") 
+
