@@ -79,10 +79,7 @@ if goal_sec > 0:
             fontprop = fm.FontProperties(fname=font_path)
             mpl.rc('font', family=fontprop.get_name())
             mpl.rcParams['axes.unicode_minus'] = False
-        except Exception as e:
-            mpl.rc('font', family='sans-serif')
-            st.warning(f"경고: 폰트 설정 중 오류 발생. 한글이 깨질 수 있습니다. ({e})")
-
+ 
         labels1 = ['총 공부 시간', '남은 목표 시간']
         sizes1 = [st_result, max(0, 100 - st_result)]
 
@@ -151,3 +148,4 @@ if goal_sec > 0:
         st.error("목표 시간을 1분 이상으로 설정해주세요.")
     except Exception as e:
         st.error(f"오류가 발생했습니다: {e}")
+
