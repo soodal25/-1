@@ -56,9 +56,6 @@ def reset_timer():
     st.session_state.total_elapsed_sec = 0.0
     st.session_state.start_time = 0.0
 
-st.title("수학과 코딩을 결합한 스터디 플래너")
-st.markdown("---")
-
 daily_goal = st.text_input("일일 목표 공부량을 입력하세요 (분):", value="60")
 try:
     goal = int(daily_goal)
@@ -175,3 +172,4 @@ if goal_sec > 0:
     except Exception as e:
 
         st.error(f"오류가 발생했습니다: {e}")
+
