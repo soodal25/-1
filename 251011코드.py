@@ -28,33 +28,7 @@ def reset_timer():
 
 st.title("수학과 코딩을 결합한 스터디 플래너")
 
-st.markdown("---")
-import time
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib as mpl
 
-if 'running' not in st.session_state:
-    st.session_state.running = False
-if 'start_time' not in st.session_state:
-    st.session_state.start_time = 0.0
-if 'total_elapsed_sec' not in st.session_state:
-    st.session_state.total_elapsed_sec = 0.0
-
-def start_stop_timer():
-    if st.session_state.running:
-        st.session_state.running = False
-        duration = time.time() - st.session_state.start_time
-        st.session_state.total_elapsed_sec += duration
-    else:
-        st.session_state.running = True
-        st.session_state.start_time = time.time()
-
-def reset_timer():
-    st.session_state.running = False
-    st.session_state.total_elapsed_sec = 0.0
-    st.session_state.start_time = 0.0
 
 daily_goal = st.text_input("일일 목표 공부량을 입력하세요 (분):", value="60")
 try:
@@ -168,8 +142,7 @@ if goal_sec > 0:
         st.pyplot(fig) 
         
     except ZeroDivisionError:
-        st.error("목표 시간이 0분입니다.")
+        st.error("목표 시간을 1분 이상으로 설정해주세.")
     except Exception as e:
 
         st.error(f"오류가 발생했습니다: {e}")
-
