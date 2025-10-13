@@ -21,7 +21,7 @@ def start_stop_timer():
     # goal_sec이 정의되지 않은 경우를 대비해 전역 변수로 접근하지 않고 목표 시간 체크
     try:
         current_goal_sec = int(st.session_state.daily_goal) * 60 if 'daily_goal' in st.sesfont_
-        location = 'C:\\Users\\USER\\AppData\\Local\\Microsoft\\Windows\\Fonts\\GowunDodum-Regular.ttf’ # For Windows
+        location = "C:\\Users\\USER\\AppData\\Local\\Microsoft\\Windows\\Fonts\\GowunDodum-Regular.ttf" # For Windows
 font_name = fm.FontProperties(fname=font_location).get_name()
 matplotlib.rc('font', family=font_name)
 # rc('font', family=font_name)sion_state else 0
@@ -164,4 +164,5 @@ if goal_sec > 0:
         st.error("목표 시간이 0분입니다.")
     except Exception as e:
         st.error(f"오류가 발생했습니다: {e}")
+
 
