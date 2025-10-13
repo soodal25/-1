@@ -26,15 +26,7 @@ if 'sizes2' not in st.session_state:
 
 
 try:
-    font_name = fm.findfont('NanumGothic')
-    mpl.rc('font', family='NanumGothic')
-except:
-    try:
-        font_name = fm.findfont('Malgun Gothic')
-        mpl.rc('font', family='Malgun Gothic')
-    except:
-        mpl.rc('font', family='sans-serif')
-
+    plt.rc("font", family="Malgun Gothic")
 finally:
     mpl.rcParams['axes.unicode_minus'] = False
 
@@ -226,3 +218,4 @@ if goal_sec > 0:
 
 elif daily_goal > 0 and elapsed_sec > 0:
     st.warning("목표 달성률을 계산하려면 목표 시간이 1분 이상이어야 합니다.")
+
