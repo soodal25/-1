@@ -2,6 +2,7 @@ import streamlit as st
 import time
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 
 if 'is_running' not in st.session_state:
     st.session_state.is_running = False
@@ -23,10 +24,8 @@ if 'sizes2' not in st.session_state:
     st.session_state.sizes2 = []
 
 
-try:
-    plt.rc("font", family="Malgun Gothic")
-finally:
-    mpl.rcParams['axes.unicode_minus'] = False
+plt.rcParams['font.family'] ='Malgun Gothic'
+plt.rcParams['axes.unicode_minus'] =False
 
 def update_subject_time(time_spent):
     if st.session_state.current_subject:
@@ -65,7 +64,7 @@ def reset_timer():
     st.session_state.sizes2 = []
 
 
-st.title("📚 과목별 측정 스터디 플래너")
+st.title("수학과 코딩을 결합한 스터디 플래너")
 st.markdown("---")
 
 daily_goal = st.number_input("일일 총 목표 공부량 (분):", min_value=0, value=60, step=5, key='goal_min')
@@ -216,5 +215,6 @@ if goal_sec > 0:
 
 elif daily_goal > 0 and elapsed_sec > 0:
     st.warning("목표 달성률을 계산하려면 목표 시간이 1분 이상이어야 합니다.")
+
 
 
