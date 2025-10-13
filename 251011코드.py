@@ -7,7 +7,61 @@ import matplotlib as mpl
 import matplotlib.font_manager as fm
 import os
 
+# ----------------------------------------------------------------------
+# ⭐️ 폰트 로드 및 설정 (안정화 로직 적용) ⭐️
+# ----------------------------------------------------------------------
+FONT_FILENAME = "GOWUNDODUM-REGULAR.TTF" 
 
+# 폰트 경로 설정 (로컬 절대 경로 대신 상대 경로 사용)
+try:
+    # 1. 폰트 파일을 코드 파일과 같은 위치에서 찾습니다.
+    font_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), FONT_FILENAME)
+except NameError:
+    # Streamlit Cloud 등에서 __file__이 정의되지 않은 경우 대비
+    font_path = FONT_FILENAME 
+
+def set_font_fallback():
+    # 폰트 로드 실패 시 NanumGothic, Malgun Gothic 순으로 시스템 폰트를 찾아 설정합니다.
+    fallback_fonts = ['NanumGothic', 'Malgun Gothic', 'sans-serif']
+    
+    for font_name_str in fallback_fonts:
+        try:
+            # 시스템에 설치된 폰트를 찾습니다.
+            font_path_auto = fm.findfont(font_name_str, fallback_to_default=False)
+            font_name_auto = fm.FontProperties(fname=font_path_auto).get_name()
+            plt.rcParams['font.family'] = font_name_auto
+            mpl.rcParams['axes.unicode_minus'] = False 
+            st.sidebar.warning(f"⚠️ 시스템 폰트 **{font_name_auto}**로 대체되어 한글이 표시됩니다.")
+            return True
+        except:
+            continue
+    
+    plt.rcParams['font.family'] = 'sans-serif'
+    mpl.rcParams['axes.unicode_minus'] = False
+    st.sidebar.error("❌ 모든 폰트 로드 실패. 그래프 한글이 깨질 수 있습니다.")
+    return False
+
+try:
+    # 1. 폰트 파일이 같은 폴더에 있는지 확인
+    if not os.path.exists(font_path):
+        raise FileNotFoundError(f"폰트 파일 '{FONT_FILENAME}'을 코드 폴더에서 찾을 수 없습니다.")
+
+    # 2. GOWUNDODUM 폰트 로드 및 적용
+    font_prop = fm.FontProperties(fname=font_path)
+    plt.rcParams['font.family'] = font_prop.get_name()
+    plt.rcParams['axes.unicode_minus'] = False
+    st.sidebar.success(f"✔️ {font_prop.get_name()} 폰트 적용 완료.")
+
+except FileNotFoundError:
+    # 3. 파일이 없을 경우 대체 폰트 실행
+    st.sidebar.error(f"❌ '{FONT_FILENAME}' 폰트 파일을 찾을 수 없습니다. 시스템 폰트로 대체 시도.")
+    set_font_fallback()
+
+except Exception as e:
+    # 4. 기타 오류 발생 시 대체 폰트 실행
+    st.sidebar.error(f"❌ 폰트 로드 중 예기치 않은 오류 발생: {e}. 시스템 폰트로 대체 시도.")
+    set_font_fallback()
+# ----------------------------------------------------------------------
 
 
 if 'running' not in st.session_state:
@@ -18,13 +72,9 @@ if 'total_elapsed_sec' not in st.session_state:
     st.session_state.total_elapsed_sec = 0.0
 
 def start_stop_timer():
-    # goal_sec이 정의되지 않은 경우를 대비해 전역 변수로 접근하지 않고 목표 시간 체크
+    # 목표 시간을 session_state에서 안전하게 가져옴 (오류 수정됨)
     try:
-        current_goal_sec = int(st.session_state.daily_goal) * 60 if 'daily_goal' in st.sesfont_
-        location = "C:\\Users\\USER\\AppData\\Local\\Microsoft\\Windows\\Fonts\\GowunDodum-Regular.ttf" # For Windows
-font_name = fm.FontProperties(fname=font_location).get_name()
-matplotlib.rc('font', family=font_name)
-# rc('font', family=font_name)sion_state else 0
+        current_goal_sec = int(st.session_state.daily_goal) * 60 if 'daily_goal' in st.session_state else 0
     except ValueError:
         current_goal_sec = 0
         
@@ -48,7 +98,6 @@ st.title("📚 Streamlit 공부 시간 측정 및 분석")
 st.markdown("---")
 
 # 1. 목표 시간 입력 (st.input 사용)
-# session_state에 저장하여 start_stop_timer에서 접근 가능하게 함
 daily_goal = st.text_input("일일 목표 공부량을 입력하세요 (분):", value="60", key='daily_goal')
 try:
     goal = int(daily_goal)
