@@ -76,7 +76,7 @@ if goal_sec > 0:
         fig, axs = plt.subplots(1, 2, figsize=(10, 5))
         
         # 폰트 설정
-font_path = ""C:/Users/USER/Downloads/GowunDodum-Regular (1).ttf""
+font_path = "C:/Users/USER/Downloads/GowunDodum-Regular (1).ttf"
 font_prop = fm.FontProperties(fname=font_path)
 
 plt.rcParams['font.family'] = font_prop.get_name()
@@ -153,3 +153,4 @@ plt.rcParams['axes.unicode_minus'] = False
     except Exception as e:
 
         st.error(f"오류가 발생했습니다: {e}")
+
