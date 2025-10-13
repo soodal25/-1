@@ -6,8 +6,8 @@ import matplotlib.font_manager as fm
 
 font_path = "C:/Users/USER/APPDATA/LOCAL/MICROSOFT/WINDOWS/FONTS/GOWUNDODUM-REGULAR.TTF"
 font_name = fm.FontProperties(fname=font_path).get_name()
-    plt.rc('font', family=font_name)
-    mpl.rcParams['axes.unicode_minus'] = False
+plt.rc('font', family=font_name)
+mpl.rcParams['axes.unicode_minus'] = False
 
 if 'is_running' not in st.session_state:
     st.session_state.is_running = False
@@ -216,6 +216,7 @@ if goal_sec > 0:
 
 elif daily_goal > 0 and elapsed_sec > 0:
     st.warning("목표 달성률을 계산하려면 목표 시간이 1분 이상이어야 합니다.")
+
 
 
 
