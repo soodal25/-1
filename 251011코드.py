@@ -57,4 +57,5 @@ except FileNotFoundError as e:
         st.sidebar.error(f"❌ 폰트 오류: {e}")
         st.sidebar.warning(f"⚠️ 시스템 폰트 **{fallback_name}**로 대체되어 한글이 표시됩니다.")
     else:
-        st.sidebar.error("❌ 모든 폰트 로드 실패
+        st.sidebar.error("❌ 모든 폰트 로드 실패)
+
