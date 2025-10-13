@@ -8,59 +8,53 @@ import matplotlib.font_manager as fm
 import os
 
 # ----------------------------------------------------------------------
-# ⭐️ 폰트 로드 및 설정 (안정화 로직 적용) ⭐️
+# ⭐️ 폰트 로드 및 설정 (최종 안정화 로직) ⭐️
 # ----------------------------------------------------------------------
 FONT_FILENAME = "GOWUNDODUM-REGULAR.TTF" 
 
-# 폰트 경로 설정 (로컬 절대 경로 대신 상대 경로 사용)
-try:
-    # 1. 폰트 파일을 코드 파일과 같은 위치에서 찾습니다.
-    font_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), FONT_FILENAME)
-except NameError:
-    # Streamlit Cloud 등에서 __file__이 정의되지 않은 경우 대비
-    font_path = FONT_FILENAME 
+def set_font_for_matplotlib():
+    try:
+        # 1. 폰트 파일을 코드와 같은 위치에서 찾습니다.
+        font_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), FONT_FILENAME)
+        
+        if not os.path.exists(font_path):
+            raise FileNotFoundError # 파일이 없으면 바로 fallback 시도
+            
+        # 2. 폰트 로드 및 적용
+        font_prop = fm.FontProperties(fname=font_path)
+        plt.rcParams['font.family'] = font_prop.get_name()
+        st.sidebar.success(f"✔️ {font_prop.get_name()} 폰트 적용 완료.")
 
-def set_font_fallback():
-    # 폰트 로드 실패 시 NanumGothic, Malgun Gothic 순으로 시스템 폰트를 찾아 설정합니다.
-    fallback_fonts = ['NanumGothic', 'Malgun Gothic', 'sans-serif']
-    
-    for font_name_str in fallback_fonts:
-        try:
-            # 시스템에 설치된 폰트를 찾습니다.
-            font_path_auto = fm.findfont(font_name_str, fallback_to_default=False)
-            font_name_auto = fm.FontProperties(fname=font_path_auto).get_name()
-            plt.rcParams['font.family'] = font_name_auto
-            mpl.rcParams['axes.unicode_minus'] = False 
-            st.sidebar.warning(f"⚠️ 시스템 폰트 **{font_name_auto}**로 대체되어 한글이 표시됩니다.")
-            return True
-        except:
-            continue
-    
-    plt.rcParams['font.family'] = 'sans-serif'
-    mpl.rcParams['axes.unicode_minus'] = False
-    st.sidebar.error("❌ 모든 폰트 로드 실패. 그래프 한글이 깨질 수 있습니다.")
-    return False
+    except (FileNotFoundError, NameError):
+        # 3. 파일이 없거나 경로 오류 시 대체 폰트 시도
+        
+        fallback_fonts = ['NanumGothic', 'Malgun Gothic', 'sans-serif']
+        found = False
+        for font_name_str in fallback_fonts:
+            try:
+                font_path_auto = fm.findfont(font_name_str, fallback_to_default=False)
+                font_name_auto = fm.FontProperties(fname=font_path_auto).get_name()
+                plt.rcParams['font.family'] = font_name_auto
+                st.sidebar.warning(f"⚠️ 시스템 폰트 **{font_name_auto}**로 대체되었습니다.")
+                found = True
+                break
+            except:
+                continue
+        
+        if not found:
+            plt.rcParams['font.family'] = 'sans-serif'
+            st.sidebar.error("❌ 모든 폰트 로드 실패. 그래프 한글이 깨질 수 있습니다.")
+            
+    except Exception as e:
+        # 4. 기타 예외 발생 시
+        plt.rcParams['font.family'] = 'sans-serif'
+        st.sidebar.error(f"❌ 폰트 로드 중 오류 발생: {e}. 기본 폰트로 대체.")
+        
+    # 모든 경우에 마이너스 기호 깨짐 방지 적용
+    plt.rcParams['axes.unicode_minus'] = False 
 
-try:
-    # 1. 폰트 파일이 같은 폴더에 있는지 확인
-    if not os.path.exists(font_path):
-        raise FileNotFoundError(f"폰트 파일 '{FONT_FILENAME}'을 코드 폴더에서 찾을 수 없습니다.")
-
-    # 2. GOWUNDODUM 폰트 로드 및 적용
-    font_prop = fm.FontProperties(fname=font_path)
-    plt.rcParams['font.family'] = font_prop.get_name()
-    plt.rcParams['axes.unicode_minus'] = False
-    st.sidebar.success(f"✔️ {font_prop.get_name()} 폰트 적용 완료.")
-
-except FileNotFoundError:
-    # 3. 파일이 없을 경우 대체 폰트 실행
-    st.sidebar.error(f"❌ '{FONT_FILENAME}' 폰트 파일을 찾을 수 없습니다. 시스템 폰트로 대체 시도.")
-    set_font_fallback()
-
-except Exception as e:
-    # 4. 기타 오류 발생 시 대체 폰트 실행
-    st.sidebar.error(f"❌ 폰트 로드 중 예기치 않은 오류 발생: {e}. 시스템 폰트로 대체 시도.")
-    set_font_fallback()
+# 폰트 설정 함수 실행
+set_font_for_matplotlib()
 # ----------------------------------------------------------------------
 
 
@@ -72,9 +66,10 @@ if 'total_elapsed_sec' not in st.session_state:
     st.session_state.total_elapsed_sec = 0.0
 
 def start_stop_timer():
-    # 목표 시간을 session_state에서 안전하게 가져옴 (오류 수정됨)
+    # 목표 시간을 session_state에서 안전하게 가져옴 (SyntaxError 수정됨)
     try:
-        current_goal_sec = int(st.session_state.daily_goal) * 60 if 'daily_goal' in st.session_state else 0
+        # 'daily_goal'이 세션 상태에 있으면 변환하고, 없으면 0으로 설정
+        current_goal_sec = int(st.session_state.daily_goal) * 60 if 'daily_goal' in st.session_state else 0 
     except ValueError:
         current_goal_sec = 0
         
@@ -129,6 +124,7 @@ st.subheader(f"총 공부 시간: {minutes}분 {seconds}초")
 st.markdown("---")
 
 # 3. 목표 달성률 계산 및 결과 출력
+# if goal_sec > 0: 블록은 변경 없음
 if goal_sec > 0:
     try:
         result = (elapsed_sec * 100) / goal_sec
@@ -213,5 +209,3 @@ if goal_sec > 0:
         st.error("목표 시간이 0분입니다.")
     except Exception as e:
         st.error(f"오류가 발생했습니다: {e}")
-
-
