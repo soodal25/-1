@@ -4,7 +4,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 
-font_path = "C://USERS//USER//APPDATA//LOCAL//MICROSOFT//WINDOWS//FONTS//GOWUNDODUM-REGULAR.TTF"
+font_path = ""C:Users\\USER\\Desktop\\GowunDodum-Regular (1).ttf""
 font_name = fm.FontProperties(fname=font_path).get_name()
 plt.rc('font', family=font_name)
 
@@ -215,6 +215,7 @@ if goal_sec > 0:
 
 elif daily_goal > 0 and elapsed_sec > 0:
     st.warning("목표 달성률을 계산하려면 목표 시간이 1분 이상이어야 합니다.")
+
 
 
 
