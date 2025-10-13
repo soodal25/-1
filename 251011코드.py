@@ -11,7 +11,7 @@ import os # ⭐️ 필수: os 모듈 추가 ⭐️
 # ⭐️ 폰트 로드 및 설정 (폰트 깨짐 및 경로/문법 오류 해결) ⭐️
 # 이 블록 전체가 코드 맨 위에 있어야 안전합니다.
 # ----------------------------------------------------------------------
-FONT_FILENAME = "GOWUNDODUM-REGULAR.TTF" 
+FONT_FILENAME = "GowunDodum-Regular (1).ttf" 
 
 # 폰트 경로 설정 (상대 경로)
 try:
@@ -212,4 +212,5 @@ if goal_sec > 0:
         st.error("목표 시간이 0분입니다.")
     except Exception as e:
         st.error(f"오류가 발생했습니다: {e}")
+
 
