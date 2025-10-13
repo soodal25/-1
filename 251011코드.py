@@ -4,6 +4,9 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.pyplot as plt
 
+plt.rcParams['font.family'] ='Malgun Gothic'
+plt.rcParams['axes.unicode_minus'] =False
+
 if 'is_running' not in st.session_state:
     st.session_state.is_running = False
 if 'start_time' not in st.session_state:
@@ -22,10 +25,6 @@ if 'labels2' not in st.session_state:
     st.session_state.labels2 = []
 if 'sizes2' not in st.session_state:
     st.session_state.sizes2 = []
-
-
-plt.rcParams['font.family'] ='Malgun Gothic'
-plt.rcParams['axes.unicode_minus'] =False
 
 def update_subject_time(time_spent):
     if st.session_state.current_subject:
@@ -215,6 +214,7 @@ if goal_sec > 0:
 
 elif daily_goal > 0 and elapsed_sec > 0:
     st.warning("목표 달성률을 계산하려면 목표 시간이 1분 이상이어야 합니다.")
+
 
 
 
