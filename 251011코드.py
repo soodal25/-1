@@ -8,30 +8,34 @@ import matplotlib.font_manager as fm
 import os
 
 # ----------------------------------------------------------------------
-# ⭐️ 폰트 로드 및 설정 (최종 안정화 로직) ⭐️
+# ⭐️ 폰트 로드 및 설정 (모든 오류 해결 로직) ⭐️
+# 파일 목록 이미지에 따라 파일명을 'GowunDodum-Regular (1).ttf'로 설정했습니다.
 # ----------------------------------------------------------------------
-FONT_FILENAME = "GOWUNDODUM-REGULAR.TTF" 
+FONT_FILENAME = "GowunDodum-Regular (1).ttf" 
 
 def set_font_for_matplotlib():
+    """Matplotlib 폰트 설정을 처리하는 안정적인 함수."""
     try:
-        # 1. 폰트 파일을 코드와 같은 위치에서 찾습니다.
+        # 1. 폰트 파일을 코드와 같은 위치에서 찾습니다. (상대 경로 사용)
         font_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), FONT_FILENAME)
         
         if not os.path.exists(font_path):
-            raise FileNotFoundError # 파일이 없으면 바로 fallback 시도
+            # 파일이 없으면 FileNotFoundError를 발생시켜 except 블록으로 이동
+            raise FileNotFoundError 
             
-        # 2. 폰트 로드 및 적용
+        # 2. GOWUNDODUM 폰트 로드 및 적용
         font_prop = fm.FontProperties(fname=font_path)
         plt.rcParams['font.family'] = font_prop.get_name()
         st.sidebar.success(f"✔️ {font_prop.get_name()} 폰트 적용 완료.")
 
-    except (FileNotFoundError, NameError):
-        # 3. 파일이 없거나 경로 오류 시 대체 폰트 시도
+    # 3. 파일 없음, 경로 오류(NameError), FileNotFoundError 발생 시 대체 폰트 시도
+    except (FileNotFoundError, NameError): 
         
         fallback_fonts = ['NanumGothic', 'Malgun Gothic', 'sans-serif']
         found = False
         for font_name_str in fallback_fonts:
             try:
+                # 시스템에 설치된 한글 폰트를 찾습니다.
                 font_path_auto = fm.findfont(font_name_str, fallback_to_default=False)
                 font_name_auto = fm.FontProperties(fname=font_path_auto).get_name()
                 plt.rcParams['font.family'] = font_name_auto
@@ -48,7 +52,7 @@ def set_font_for_matplotlib():
     except Exception as e:
         # 4. 기타 예외 발생 시
         plt.rcParams['font.family'] = 'sans-serif'
-        st.sidebar.error(f"❌ 폰트 로드 중 오류 발생: {e}. 기본 폰트로 대체.")
+        st.sidebar.error(f"❌ 폰트 로드 중 예기치 않은 오류 발생: {e}. 기본 폰트로 대체.")
         
     # 모든 경우에 마이너스 기호 깨짐 방지 적용
     plt.rcParams['axes.unicode_minus'] = False 
@@ -124,7 +128,6 @@ st.subheader(f"총 공부 시간: {minutes}분 {seconds}초")
 st.markdown("---")
 
 # 3. 목표 달성률 계산 및 결과 출력
-# if goal_sec > 0: 블록은 변경 없음
 if goal_sec > 0:
     try:
         result = (elapsed_sec * 100) / goal_sec
