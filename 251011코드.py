@@ -7,66 +7,12 @@ import matplotlib as mpl
 import matplotlib.font_manager as fm # 필수: 폰트 관리를 위한 모듈
 import os # 필수: 상대 경로 설정을 위한 모듈
 
-# ----------------------------------------------------------------------
-# ⭐️ 폰트 로드 및 설정 (폰트 깨짐 및 모든 오류 해결 로직) ⭐️
-# 이 블록 전체가 코드 맨 위에 있어야 합니다.
-# ----------------------------------------------------------------------
-FONT_FILENAME = "GOWUNDODUM-REGULAR.TTF" 
+font_path = "/USERS/USER/APPDATA/LOCAL/MICROSOFT/WINDOWS/FONTS/GOWUNDODUM-REGULAR.TTF"
+font_prop = fm.FontProperties(fname=font_path)
 
-# 폰트 경로 설정 (상대 경로 사용)
-try:
-    # 현재 스크립트 파일이 있는 디렉토리를 기준으로 폰트 파일을 찾습니다.
-    font_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), FONT_FILENAME)
-except NameError:
-    # Streamlit Cloud 환경 등에서 __file__이 정의되지 않은 경우 대비
-    font_path = FONT_FILENAME 
-
-def set_font_fallback():
-    # 시스템 내에서 대체 폰트(한글 지원)를 찾아 설정합니다.
-    fallback_fonts = ['NanumGothic', 'Malgun Gothic', 'sans-serif']
-    
-    for font_name_str in fallback_fonts:
-        try:
-            font_path_auto = fm.findfont(font_name_str, fallback_to_default=False)
-            font_name_auto = fm.FontProperties(fname=font_path_auto).get_name()
-            plt.rcParams['font.family'] = font_name_auto
-            mpl.rcParams['axes.unicode_minus'] = False # 마이너스 기호 깨짐 방지
-            return True, font_name_auto
-        except:
-            continue
-    
-    plt.rcParams['font.family'] = 'sans-serif'
-    mpl.rcParams['axes.unicode_minus'] = False
-    return False, 'sans-serif'
-
-try:
-    # 1. 폰트 파일 존재 여부 확인
-    if not os.path.exists(font_path):
-        raise FileNotFoundError(f"폰트 파일 '{FONT_FILENAME}'을 코드 폴더에서 찾을 수 없습니다.")
-
-    # 2. GOWUNDODUM 폰트 로드 및 적용
-    font_name = fm.FontProperties(fname=font_path).get_name()
-    plt.rcParams['font.family'] = font_name
-    mpl.rcParams['axes.unicode_minus'] = False
-    st.sidebar.success(f"✔️ {font_name} 폰트 적용 완료.")
-
-except FileNotFoundError as e:
-    # 3. GOWUNDODUM 파일 없을 시 대체 폰트 로드 시도
-    success, fallback_name = set_font_fallback()
-    if success:
-        st.sidebar.error(f"❌ 폰트 파일 오류: {e}")
-        st.sidebar.warning(f"⚠️ 시스템 폰트 **{fallback_name}**로 대체되어 한글이 표시됩니다.")
-    else:
-        st.sidebar.error("❌ 모든 폰트 로드 실패. 그래프 한글이 깨질 수 있습니다.")
-
-except Exception:
-    # 4. 기타 폰트 로드 오류 시 대체 폰트 로드 시도
-    success, fallback_name = set_font_fallback()
-    if success:
-        st.sidebar.warning(f"⚠️ 폰트 로드 중 예기치 않은 오류 발생. 시스템 폰트 **{fallback_name}**로 대체됩니다.")
-    else:
-        st.sidebar.error("❌ 폰트 로드 중 예기치 않은 오류 발생. 기본 폰트로 대체됩니다.")
-# ----------------------------------------------------------------------
+# Matplotlib 기본 설정
+plt.rcParams['font.family'] = font_prop.get_name()
+plt.rcParams['axes.unicode_minus'] = False  # 마이너스 기호 깨짐 방지
 
 
 if 'running' not in st.session_state:
@@ -212,3 +158,4 @@ if goal_sec > 0:
         st.error("목표 시간이 0분입니다.")
     except Exception as e:
         st.error(f"오류가 발생했습니다: {e}")
+
