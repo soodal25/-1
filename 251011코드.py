@@ -7,8 +7,21 @@ import matplotlib as mpl
 import matplotlib.font_manager as fm # 필수: 폰트 관리를 위한 모듈
 import os # 필수: 상대 경로 설정을 위한 모듈
 
-font_path = "/USERS/USER/APPDATA/LOCAL/MICROSOFT/WINDOWS/FONTS/GOWUNDODUM-REGULAR.TTF"
-font_prop = fm.FontProperties(fname=font_path)
+@st.cache_data
+def fontRegistered():
+    font_dirs = [os.getcwd() + '/custom_fonts']
+    font_files = fm.findSystemFonts(fontpaths=font_dirs)
+    for font_file in font_files:
+        fm.fontManager.addfont(font_file)
+    fm._load_fontmanager(try_read_cache=False)
+
+
+
+def main():
+
+    fontRegistered()
+    font_path = "/USERS/USER/APPDATA/LOCAL/MICROSOFT/WINDOWS/FONTS/GOWUNDODUM-REGULAR.TTF"
+    font_prop = fm.FontProperties(fname=font_path)
 
 # Matplotlib 기본 설정
 plt.rcParams['font.family'] = font_prop.get_name()
@@ -158,4 +171,5 @@ if goal_sec > 0:
         st.error("목표 시간이 0분입니다.")
     except Exception as e:
         st.error(f"오류가 발생했습니다: {e}")
+
 
