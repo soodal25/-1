@@ -75,12 +75,14 @@ if goal_sec > 0:
         # 4. 그래프 생성 및 표시 (st.pyplot 사용)
         fig, axs = plt.subplots(1, 2, figsize=(10, 5))
         
-        # 폰트 설정 (웹 환경에서는 시스템 폰트 사용하도록 주석 처리)
-        # font_path = "C:/Windows/Fonts/malgun.ttf"
-        # fontprop = fm.FontProperties(fname=font_path)
-        # mpl.rc('font', family=fontprop.get_name())
+        # 폰트 설정
+font_path = ""C:/Users/USER/Downloads/GowunDodum-Regular (1).ttf""
+font_prop = fm.FontProperties(fname=font_path)
+
+plt.rcParams['font.family'] = font_prop.get_name()
+plt.rcParams['axes.unicode_minus'] = False  
         
-        # 공부 목표 달성률 파이 차트
+
         labels1 = ['총 공부 시간', '남은 목표 시간']
         sizes1 = [st_result, max(0, 100 - st_result)] 
 
@@ -149,4 +151,5 @@ if goal_sec > 0:
     except ZeroDivisionError:
         st.error("목표 시간이 0분입니다.")
     except Exception as e:
+
         st.error(f"오류가 발생했습니다: {e}")
