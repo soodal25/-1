@@ -7,10 +7,6 @@ import matplotlib as mpl
 import matplotlib.font_manager as fm
 import os
 
-# ----------------------------------------------------------------------
-# ⭐️ 폰트 로드 및 설정 (모든 오류 해결 로직) ⭐️
-# 파일 목록 이미지에 따라 파일명을 'GowunDodum-Regular (1).ttf'로 설정했습니다.
-# ----------------------------------------------------------------------
 FONT_FILENAME = "GowunDodum-Regular (1).ttf" 
 
 def set_font_for_matplotlib():
@@ -35,7 +31,6 @@ def set_font_for_matplotlib():
         found = False
         for font_name_str in fallback_fonts:
             try:
-                # 시스템에 설치된 한글 폰트를 찾습니다.
                 font_path_auto = fm.findfont(font_name_str, fallback_to_default=False)
                 font_name_auto = fm.FontProperties(fname=font_path_auto).get_name()
                 plt.rcParams['font.family'] = font_name_auto
@@ -59,7 +54,7 @@ def set_font_for_matplotlib():
 
 # 폰트 설정 함수 실행
 set_font_for_matplotlib()
-# ----------------------------------------------------------------------
+
 
 
 if 'running' not in st.session_state:
@@ -70,7 +65,6 @@ if 'total_elapsed_sec' not in st.session_state:
     st.session_state.total_elapsed_sec = 0.0
 
 def start_stop_timer():
-    # 목표 시간을 session_state에서 안전하게 가져옴 (SyntaxError 수정됨)
     try:
         # 'daily_goal'이 세션 상태에 있으면 변환하고, 없으면 0으로 설정
         current_goal_sec = int(st.session_state.daily_goal) * 60 if 'daily_goal' in st.session_state else 0 
@@ -93,7 +87,7 @@ def reset_timer():
     st.session_state.total_elapsed_sec = 0.0
     st.session_state.start_time = 0.0
 
-st.title("📚 Streamlit 공부 시간 측정 및 분석")
+st.title("수학과 코딩을 결합한 스터디 플래너")
 st.markdown("---")
 
 # 1. 목표 시간 입력 (st.input 사용)
@@ -212,4 +206,5 @@ if goal_sec > 0:
         st.error("목표 시간이 0분입니다.")
     except Exception as e:
         st.error(f"오류가 발생했습니다: {e}")
+
 
