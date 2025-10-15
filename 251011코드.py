@@ -12,11 +12,11 @@ FONT_FILENAME = "GowunDodum-Regular (1).ttf"
 def set_font_for_matplotlib():
     """Matplotlib 폰트 설정을 처리하는 안정적인 함수."""
     try:
-        # 1. 폰트 파일을 코드와 같은 위치에서 찾습니다. (상대 경로 사용)
+        
         font_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), FONT_FILENAME)
         
         if not os.path.exists(font_path):
-            # 파일이 없으면 FileNotFoundError를 발생시켜 except 블록으로 이동
+            
             raise FileNotFoundError 
             
         # 2. GOWUNDODUM 폰트 로드 및 적용
@@ -45,7 +45,7 @@ def set_font_for_matplotlib():
             st.sidebar.error("❌ 모든 폰트 로드 실패. 그래프 한글이 깨질 수 있습니다.")
             
     except Exception as e:
-        # 4. 기타 예외 발생 시
+        
         plt.rcParams['font.family'] = 'sans-serif'
         st.sidebar.error(f"❌ 폰트 로드 중 예기치 않은 오류 발생: {e}. 기본 폰트로 대체.")
         
