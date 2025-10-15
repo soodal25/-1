@@ -12,19 +12,16 @@ FONT_FILENAME = "GowunDodum-Regular (1).ttf"
 def set_font_for_matplotlib():
     """Matplotlib 폰트 설정을 처리하는 안정적인 함수."""
     try:
-        # 1. 폰트 파일을 코드와 같은 위치에서 찾습니다. (상대 경로 사용)
         font_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), FONT_FILENAME)
         
-        if not os.path.exists(font_path):
-            # 파일이 없으면 FileNotFoundError를 발생시켜 except 블록으로 이동
+        if not os.path.exists(font_path)
             raise FileNotFoundError 
             
         # 2. GOWUNDODUM 폰트 로드 및 적용
         font_prop = fm.FontProperties(fname=font_path)
         plt.rcParams['font.family'] = font_prop.get_name()
-        st.sidebar.success(f"✔️ {font_prop.get_name()} 폰트 적용 완료.")
+        st.sidebar.success(f"✔ {font_prop.get_name()} 폰트 적용 완료.")
 
-    # 3. 파일 없음, 경로 오류(NameError), FileNotFoundError 발생 시 대체 폰트 시도
     except (FileNotFoundError, NameError): 
         
         fallback_fonts = ['NanumGothic', 'Malgun Gothic', 'sans-serif']
@@ -34,7 +31,7 @@ def set_font_for_matplotlib():
                 font_path_auto = fm.findfont(font_name_str, fallback_to_default=False)
                 font_name_auto = fm.FontProperties(fname=font_path_auto).get_name()
                 plt.rcParams['font.family'] = font_name_auto
-                st.sidebar.warning(f"⚠️ 시스템 폰트 **{font_name_auto}**로 대체되었습니다.")
+                st.sidebar.warning(f"⚠ 시스템 폰트 **{font_name_auto}**로 대체되었습니다.")
                 found = True
                 break
             except:
@@ -42,17 +39,14 @@ def set_font_for_matplotlib():
         
         if not found:
             plt.rcParams['font.family'] = 'sans-serif'
-            st.sidebar.error("❌ 모든 폰트 로드 실패. 그래프 한글이 깨질 수 있습니다.")
+            st.sidebar.error("모든 폰트 로드 실패. 그래프 한글이 깨질 수 있습니다.")
             
     except Exception as e:
-        # 4. 기타 예외 발생 시
         plt.rcParams['font.family'] = 'sans-serif'
         st.sidebar.error(f"❌ 폰트 로드 중 예기치 않은 오류 발생: {e}. 기본 폰트로 대체.")
         
-    # 모든 경우에 마이너스 기호 깨짐 방지 적용
     plt.rcParams['axes.unicode_minus'] = False 
 
-# 폰트 설정 함수 실행
 set_font_for_matplotlib()
 
 
@@ -103,7 +97,7 @@ except ValueError:
 # 2. 타이머 위젯 및 로직
 col1, col2 = st.columns(2)
 
-button_label = "일시 정지 ⏸️" if st.session_state.running else "공부 시작/재개 ▶️"
+button_label = "일시 정지 ⏸" if st.session_state.running else "공부 시작/재개 ▶"
 col1.button(button_label, on_click=start_stop_timer)
 col2.button("종료 및 초기화 🔄", on_click=reset_timer)
 
@@ -206,5 +200,3 @@ if goal_sec > 0:
         st.error("목표 시간이 0분입니다.")
     except Exception as e:
         st.error(f"오류가 발생했습니다: {e}")
-
-
