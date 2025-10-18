@@ -127,7 +127,12 @@ if goal_sec > 0:
             startangle=90,
             textprops={'fontproperties': fm.FontProperties(fname=font_path) if font_path else None}
         )
-        axs[0].set_title("공부 목표 달성률", fontproperties=fm.FontProperties(fname=font_path) if font_path else None)
+        axs[0].set_title(
+    "📈 목표 달성률",
+    fontproperties=title_font,
+    fontsize=24,   # 크게
+    pad=25         # 여백 살짝
+)
         axs[0].axis('equal')
 
         # ✅ 사이드바 과목 비율 입력
@@ -156,7 +161,12 @@ if goal_sec > 0:
                 startangle=90,
                 textprops={'fontproperties': fm.FontProperties(fname=font_path) if font_path else None}
             )
-            axs[1].set_title("과목별 공부 시간 비율", fontproperties=fm.FontProperties(fname=font_path) if font_path else None)
+            axs[1].set_title(
+    "📊 과목별 공부 비율",
+    fontproperties=title_font,
+    fontsize=24,
+    pad=25
+)
             axs[1].axis('equal')
         else:
             axs[1].set_title("과목 비율 정보를 입력하세요.", fontproperties=fm.FontProperties(fname=font_path) if font_path else None)
@@ -168,3 +178,4 @@ if goal_sec > 0:
         st.error("목표 시간이 0분입니다.")
     except Exception as e:
         st.error(f"오류가 발생했습니다: {e}")
+
