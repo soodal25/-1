@@ -7,7 +7,7 @@ import matplotlib as mpl
 import os
 import matplotlib.font_manager as fm
 
-plt.rcParams['font.family'] ='Nanum Gothic'
+plt.rcParams['font.family'] ='Pretendard'
 plt.rcParams['axes.unicode_minus'] =False
 
 if 'running' not in st.session_state:
@@ -159,3 +159,4 @@ if goal_sec > 0:
         st.error("목표 시간이 0분입니다.")
     except Exception as e:
         st.error(f"오류가 발생했습니다: {e}")
+
