@@ -44,7 +44,6 @@ def start_stop_timer():
             st.session_state.running = True
             st.session_state.start_time = time.time()
 
-    # 타이머 초기화 함수
     def reset_timer():
         st.session_state.running = False
         st.session_state.total_elapsed_sec = 0.0
@@ -178,5 +177,6 @@ def start_stop_timer():
 # Streamlit 앱 실행 시작점
 if __name__ == '__main__':
     main()
+
 
 
