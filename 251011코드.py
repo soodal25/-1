@@ -10,15 +10,6 @@ import matplotlib.font_manager as fm
 import platform
 from matplotlib import rc
 
-@st.cache_data
-def fontRegistered():
-# 전체 캐시지우기
-    st.cache_data.clear()
-    font_dirs = [os.getcwd() + '/custom_fonts']
-    font_files = fm.findSystemFonts(fontpaths=font_dirs)
-    for font_file in font_files:
-        fm.fontManager.addfont(font_file)
-    fm._load_fontmanager(try_read_cache=False)
 
 rc('font', family='Malgun Gothic')
 plt.rcParams['axes.unicode_minus'] =False
@@ -173,3 +164,4 @@ if goal_sec > 0:
         st.error("목표 시간이 0분입니다.")
     except Exception as e:
         st.error(f"오류가 발생했습니다: {e}")
+
