@@ -114,6 +114,7 @@ if goal_sec > 0:
             st.warning(f"아쉽지만 목표를 달성하지 못했어요ㅠㅠ 목표 달성률은 **{st_result}%**에요.")
 
         # ✅ 그래프 생성
+        title_font = fm.FontProperties(fname=font_path, weight='bold')
         fig, axs = plt.subplots(1, 2, figsize=(10, 5))
 
         # (1) 공부 목표 달성률
@@ -178,4 +179,5 @@ if goal_sec > 0:
         st.error("목표 시간이 0분입니다.")
     except Exception as e:
         st.error(f"오류가 발생했습니다: {e}")
+
 
