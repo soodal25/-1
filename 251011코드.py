@@ -9,25 +9,8 @@ import os
 import matplotlib.font_manager as fm
 import platform
 
-# -------------------- 폰트 설정: Nanum Gothic 파일을 직접 지정 --------------------
-# 🚨🚨 NanumGothic.ttf 파일을 이 코드 파일과 함께 업로드해야 합니다. 🚨🚨
-FONT_PATH = 'NanumGothic.ttf' 
-
-# 폰트 파일이 존재하는 경우 해당 폰트로 설정
-if os.path.exists(FONT_PATH):
-    # 폰트 속성 로드
-    fontprop = fm.FontProperties(fname=FONT_PATH, size=10)
-    plt.rcParams['font.family'] = fontprop.get_name()
-    plt.rcParams['axes.unicode_minus'] = False # 마이너스 기호 깨짐 방지
-    
-    # 폰트 캐시 갱신 (Streamlit 환경에서 폰트 적용을 위해 필수)
-    try:
-        fm._rebuild() 
-    except Exception:
-        pass
-else:
-    # 폰트 파일이 없을 경우 기본 설정으로 폴백
-    plt.rcParams['font.family'] = 'sans-serif' 
+plt.rcParams['font.family'] ='Malgun Gothic'
+plt.rcParams['axes.unicode_minus'] =False
 
 # -------------------- Streamlit 앱의 메인 함수 정의 --------------------
 def main():
@@ -196,3 +179,4 @@ def main():
 # Streamlit 앱 실행 시작점
 if __name__ == '__main__':
     main()
+
