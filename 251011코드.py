@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import os
+import matplotlib.font_manager as fm
 
 font_location = 'C:\\WINDOWS\\Fonts\\NanumGothicExtraBold.ttf' # For Windows
 font_name = fm.FontProperties(fname=font_location).get_name()
@@ -159,6 +160,7 @@ if goal_sec > 0:
         st.error("목표 시간이 0분입니다.")
     except Exception as e:
         st.error(f"오류가 발생했습니다: {e}")
+
 
 
 
