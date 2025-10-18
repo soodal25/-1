@@ -9,8 +9,11 @@ import os
 import matplotlib.font_manager as fm
 
 
-plt.rcParams['font.family'] = 'Nanum Gothic'
-plt.rcParams['axes.unicode_minus'] = False
+fe = fm.FontEntry(
+    fname=r'/usr/share/fonts/truetype/nanum/NanumGothic.ttf', # ttf 파일이 저장되어 있는 경로
+    name='NanumGothic')                        # 이 폰트의 원하는 이름 설정
+fm.fontManager.ttflist.insert(0, fe)              # Matplotlib에 폰트 추가
+plt.rcParams.update({'font.size': 18, 'font.family': 'NanumGothic'}) # 폰트 설정
 
 if 'running' not in st.session_state:
     st.session_state.running = False
@@ -161,6 +164,7 @@ if goal_sec > 0:
         st.error("목표 시간이 0분입니다.")
     except Exception as e:
         st.error(f"오류가 발생했습니다: {e}")
+
 
 
 
