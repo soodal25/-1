@@ -154,37 +154,46 @@ if goal_sec > 0:
                     sizes2.append(percent)
 
         # (2) 과목별 비율 파이차트
-if sum(sizes2) > 0:
-    # 색상 먼저 정의 (if 안쪽이지만 pie 전에)
-    colors_goal = ["#B2CCFF", "#FAED7D"]
+        # (2) 과목별 비율 파이차트  ← 기존 주석 라인부터 교체
+        if sum(sizes2) > 0:
+            # 색상 팔레트: 과목 수만큼 자동 생성 (tab20)
+            import matplotlib as mpl
+            cmap = mpl.cm.get_cmap("tab20")
+            colors_subj = [cmap(i) for i in range(len(labels2))]
 
-    wedges2, texts2, autotexts2 = axs[1].pie(
-        sizes2,
-        labels=labels2,
-        autopct="%1.1f%%",
-        startangle=90,
-        colors=colors_goal,  # ← 여기 색상 적용
-        textprops={'fontproperties': fm.FontProperties(fname=font_path) if font_path else None}
-    )
+            # 만약 파스텔 블루/옐로 두 색만 쓰고 싶다면 아래 한 줄로 교체:
+            # colors_subj = ["#B2CCFF", "#FAED7D"] * ((len(labels2)+1)//2)
 
-    axs[1].set_title(
-        "과목별 공부 비율",
-        fontproperties=title_font,
-        fontsize=24,
-        pad=25
-    )
-    axs[1].axis('equal')
-
+            wedges2, texts2, autotexts2 = axs[1].pie(
+                sizes2,
+                labels=labels2,
+                autopct="%1.1f%%",
+                startangle=90,
+                colors=colors_subj,
+                textprops={'fontproperties': fm.FontProperties(fname=font_path) if font_path else None}
+            )
+            axs[1].set_title(
+                "과목별 공부 비율",
+                fontproperties=title_font,
+                fontsize=24,
+                pad=25
+            )
+            axs[1].axis('equal')
         else:
-            axs[1].set_title("과목 비율 정보를 입력하세요.", fontproperties=fm.FontProperties(fname=font_path) if font_path else None)
+            axs[1].set_title(
+                "과목 비율 정보를 입력하세요.",
+                fontproperties=fm.FontProperties(fname=font_path) if font_path else None
+            )
 
         plt.tight_layout()
         st.pyplot(fig)
+
 
     except ZeroDivisionError:
         st.error("목표 시간이 0분입니다.")
     except Exception as e:
         st.error(f"오류가 발생했습니다: {e}")
+
 
 
 
