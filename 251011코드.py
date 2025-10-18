@@ -9,11 +9,9 @@ import os
 import matplotlib.font_manager as fm
 import matplotlib.pyplot as plt
 
-	 
+plt.rcParams['font.family'] = 'NanumGothic'
+plt.rcParams['axes.unicode_minus'] = False  # 마이너스 기호 깨짐 방지
 
-	plt.rcParams['font.family'] = 'NanumGothic'
-
-	plt.rcParams['axes.unicode_minus'] = False  # 마이너스 기호 깨짐 방지
 if 'running' not in st.session_state:
     st.session_state.running = False
 if 'start_time' not in st.session_state:
@@ -163,6 +161,7 @@ if goal_sec > 0:
         st.error("목표 시간이 0분입니다.")
     except Exception as e:
         st.error(f"오류가 발생했습니다: {e}")
+
 
 
 
