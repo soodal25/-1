@@ -7,9 +7,7 @@ import matplotlib as mpl
 import os
 import matplotlib.font_manager as fm
 
-plt.rc('font', family='NanumGothicOTF') # For MacOS
-plt.rc('font', family='NanumGothic') # For Windows
-%matplotlib inline
+plt.rcParams['font.family'] ='Malgun Gothic'
 
 if 'running' not in st.session_state:
     st.session_state.running = False
@@ -160,6 +158,7 @@ if goal_sec > 0:
         st.error("목표 시간이 0분입니다.")
     except Exception as e:
         st.error(f"오류가 발생했습니다: {e}")
+
 
 
 
