@@ -20,15 +20,25 @@ def main():
         st.session_state.total_elapsed_sec = 0.0
     if 'start_time' not in st.session_state:
         st.session_state.start_time = 0.0
-    if 'daily_goal' not in st.session_state: # 목표 시간 key도 초기화하여 안전성 확보
+    if 'daily_goal' not in st.session_state: # 목표 시간 key 초기화
         st.session_state.daily_goal = "60" 
     # ------------------------------------------------------------------
 
-plt.rcParams['font.family'] ='Malgun Gothic'
-plt.rcParams['axes.unicode_minus'] =False
-def start_stop_timer():
+    # -------------------- 2. 폰트 설정 및 캐시 재빌드 (한글 깨짐 방지) --------------------
+    font_name = 'Malgun Gothic'
+    plt.rcParams['font.family'] = font_name
+    plt.rcParams['axes.unicode_minus'] = False # 마이너스 기호 깨짐 방지
+    try:
+        # 폰트 캐시를 갱신하여 폰트 설정을 적용합니다.
+        fm._rebuild() 
+    except Exception:
+        pass
+    # -------------------------------------------------------------------------------------
+
+    # 타이머 시작/정지/재개 함수 (main 함수 내부에 위치)
+    def start_stop_timer():
         try:
-            # 'daily_goal'은 텍스트 입력의 key로, session_state에 저장됨
+            # 'daily_goal'은 session_state에 저장된 값을 사용
             current_goal_sec = int(st.session_state.daily_goal) * 60 
         except ValueError:
             current_goal_sec = 0
@@ -44,6 +54,7 @@ def start_stop_timer():
             st.session_state.running = True
             st.session_state.start_time = time.time()
 
+    # 타이머 초기화 함수 (main 함수 내부에 위치)
     def reset_timer():
         st.session_state.running = False
         st.session_state.total_elapsed_sec = 0.0
@@ -54,7 +65,7 @@ def start_stop_timer():
     st.title("수학과 코딩을 결합한 스터디 플래너")
     st.markdown("---")
 
-    # 목표 시간 입력
+    # 1. 목표 시간 입력 (st.input 사용)
     daily_goal = st.text_input("일일 목표 공부량을 입력하세요 (분):", key='daily_goal') 
     
     try:
@@ -65,7 +76,7 @@ def start_stop_timer():
         st.error("목표 시간은 숫자로 입력해 주세요.")
         goal_sec = 0
 
-    # 타이머 버튼
+    # 2. 타이머 위젯 및 로직
     col1, col2 = st.columns(2)
     
     button_label = "일시 정지 ⏸" if st.session_state.running else "공부 시작/재개 ▶" 
@@ -78,7 +89,6 @@ def start_stop_timer():
         time.sleep(1) 
         st.rerun()
     else:
-        # 에러 발생했던 라인: 초기화 덕분에 정상 작동
         current_elapsed = st.session_state.total_elapsed_sec 
 
     elapsed_sec = int(current_elapsed)
@@ -88,7 +98,7 @@ def start_stop_timer():
     st.subheader(f"총 공부 시간: {minutes}분 {seconds}초")
     st.markdown("---")
 
-    # 목표 달성률 계산 및 결과 출력
+    # 3. 목표 달성률 계산 및 결과 출력
     if goal_sec > 0:
         try:
             result = (elapsed_sec * 100) / goal_sec
@@ -177,6 +187,3 @@ def start_stop_timer():
 # Streamlit 앱 실행 시작점
 if __name__ == '__main__':
     main()
-
-
-
