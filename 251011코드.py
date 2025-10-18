@@ -1,4 +1,12 @@
-import streamlit as st
+
+# 2. 타이머 위젯 및 로직
+col1, col2 = st.columns(2)
+
+button_label = "일시 정지 ⏸" if st.session_state.running else "공부 시작/재개 ▶"
+col1.button(button_label, on_click=start_stop_timer)
+col2.button("종료 및 초기화 🔄", on_click=reset_timer)
+
+if st.session_state.running:import streamlit as st
 import time
 import pandas as pd
 import numpy as np
@@ -49,14 +57,6 @@ except ValueError:
     st.error("목표 시간은 숫자로 입력해 주세요.")
     goal_sec = 0
 
-# 2. 타이머 위젯 및 로직
-col1, col2 = st.columns(2)
-
-button_label = "일시 정지 ⏸" if st.session_state.running else "공부 시작/재개 ▶"
-col1.button(button_label, on_click=start_stop_timer)
-col2.button("종료 및 초기화 🔄", on_click=reset_timer)
-
-if st.session_state.running:
     current_elapsed = st.session_state.total_elapsed_sec + (time.time() - st.session_state.start_time)
     time.sleep(1) 
     st.rerun()
@@ -155,6 +155,7 @@ if goal_sec > 0:
         st.error("목표 시간이 0분입니다.")
     except Exception as e:
         st.error(f"오류가 발생했습니다: {e}")
+
 
 
 
