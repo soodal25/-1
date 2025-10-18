@@ -24,16 +24,8 @@ def main():
         st.session_state.daily_goal = "60" 
     # ------------------------------------------------------------------
 
-    # -------------------- 2. 폰트 설정 및 캐시 재빌드 (한글 깨짐 방지) --------------------
-    font_name = 'Malgun Gothic'
-    plt.rcParams['font.family'] = font_name
-    plt.rcParams['axes.unicode_minus'] = False # 마이너스 기호 깨짐 방지
-    try:
-        # 폰트 캐시를 갱신하여 폰트 설정을 적용합니다.
-        fm._rebuild() 
-    except Exception:
-        pass
-    # -------------------------------------------------------------------------------------
+plt.rcParams['font.family'] ='Malgun Gothic'
+plt.rcParams['axes.unicode_minus'] =False
 
     # 타이머 시작/정지/재개 함수
     def start_stop_timer():
@@ -188,3 +180,4 @@ def main():
 # Streamlit 앱 실행 시작점
 if __name__ == '__main__':
     main()
+
