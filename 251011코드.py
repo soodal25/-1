@@ -26,9 +26,7 @@ def main():
 
 plt.rcParams['font.family'] ='Malgun Gothic'
 plt.rcParams['axes.unicode_minus'] =False
-
-    # 타이머 시작/정지/재개 함수
-    def start_stop_timer():
+def start_stop_timer():
         try:
             # 'daily_goal'은 텍스트 입력의 key로, session_state에 저장됨
             current_goal_sec = int(st.session_state.daily_goal) * 60 
@@ -180,4 +178,5 @@ plt.rcParams['axes.unicode_minus'] =False
 # Streamlit 앱 실행 시작점
 if __name__ == '__main__':
     main()
+
 
