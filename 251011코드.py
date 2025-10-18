@@ -154,14 +154,13 @@ if goal_sec > 0:
                     sizes2.append(percent)
 
         # (2) 과목별 비율 파이차트
-        # (2) 과목별 비율 파이차트  ← 기존 주석 라인부터 교체
         if sum(sizes2) > 0:
             # 색상 팔레트: 과목 수만큼 자동 생성 (tab20)
             import matplotlib as mpl
             cmap = mpl.cm.get_cmap("tab20")
             colors_subj = [cmap(i) for i in range(len(labels2))]
 
-            # 만약 파스텔 블루/옐로 두 색만 쓰고 싶다면 아래 한 줄로 교체:
+         
             # colors_subj = ["#B2CCFF", "#FAED7D"] * ((len(labels2)+1)//2)
 
             wedges2, texts2, autotexts2 = axs[1].pie(
@@ -193,6 +192,7 @@ if goal_sec > 0:
         st.error("목표 시간이 0분입니다.")
     except Exception as e:
         st.error(f"오류가 발생했습니다: {e}")
+
 
 
 
