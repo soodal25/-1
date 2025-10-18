@@ -19,7 +19,8 @@ def fontRegistered():
     for font_file in font_files:
         fm.fontManager.addfont(font_file)
     fm._load_fontmanager(try_read_cache=False)
-plt.rcParams['font.family'] ='Malgun Gothic'
+
+rc('font', family='Malgun Gothic')
 plt.rcParams['axes.unicode_minus'] =False
 
 # -------------------- Streamlit 앱의 메인 함수 정의 --------------------
@@ -189,6 +190,7 @@ def main():
 # Streamlit 앱 실행 시작점
 if __name__ == '__main__':
     main()
+
 
 
 
