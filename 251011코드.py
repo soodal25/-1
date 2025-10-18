@@ -12,7 +12,7 @@ import platform
 # -------------------- Streamlit 앱의 메인 함수 정의 --------------------
 def main():
     
-    # -------------------- 1. 세션 상태 초기화 (필수) --------------------
+    # -------------------- 1. Session State 초기화 (필수) --------------------
     # st.session_state 변수들을 참조하기 전에 반드시 초기화해야 합니다.
     if 'running' not in st.session_state:
         st.session_state.running = False
@@ -20,9 +20,11 @@ def main():
         st.session_state.total_elapsed_sec = 0.0
     if 'start_time' not in st.session_state:
         st.session_state.start_time = 0.0
+    if 'daily_goal' not in st.session_state: # 목표 시간 key도 초기화하여 안전성 확보
+        st.session_state.daily_goal = "60" 
     # ------------------------------------------------------------------
 
-    # -------------------- 2. 폰트 설정 및 캐시 재빌드 --------------------
+    # -------------------- 2. 폰트 설정 및 캐시 재빌드 (한글 깨짐 방지) --------------------
     font_name = 'Malgun Gothic'
     plt.rcParams['font.family'] = font_name
     plt.rcParams['axes.unicode_minus'] = False # 마이너스 기호 깨짐 방지
@@ -31,13 +33,13 @@ def main():
         fm._rebuild() 
     except Exception:
         pass
-    # ------------------------------------------------------------------
+    # -------------------------------------------------------------------------------------
 
     # 타이머 시작/정지/재개 함수
     def start_stop_timer():
         try:
-            # 'daily_goal'이 세션 상태에 있으면 변환하고, 없으면 0으로 설정
-            current_goal_sec = int(st.session_state.daily_goal) * 60 if 'daily_goal' in st.session_state else 0 
+            # 'daily_goal'은 텍스트 입력의 key로, session_state에 저장됨
+            current_goal_sec = int(st.session_state.daily_goal) * 60 
         except ValueError:
             current_goal_sec = 0
             
@@ -64,7 +66,8 @@ def main():
     st.markdown("---")
 
     # 목표 시간 입력
-    daily_goal = st.text_input("일일 목표 공부량을 입력하세요 (분):", value="60", key='daily_goal')
+    daily_goal = st.text_input("일일 목표 공부량을 입력하세요 (분):", key='daily_goal') 
+    
     try:
         goal = int(daily_goal)
         goal_sec = 60 * goal
@@ -80,13 +83,14 @@ def main():
     col1.button(button_label, on_click=start_stop_timer)
     col2.button("종료 및 초기화 🔄", on_click=reset_timer)
 
-    # 타이머 로직 및 reru (이전 코드의 훼손된 부분 복구)
+    # 타이머 로직 및 reru
     if st.session_state.running:
         current_elapsed = st.session_state.total_elapsed_sec + (time.time() - st.session_state.start_time)
         time.sleep(1) 
         st.rerun()
     else:
-        current_elapsed = st.session_state.total_elapsed_sec # 에러 발생했던 라인 복구됨
+        # 에러 발생했던 라인: 초기화 덕분에 정상 작동
+        current_elapsed = st.session_state.total_elapsed_sec 
 
     elapsed_sec = int(current_elapsed)
     minutes = elapsed_sec // 60
@@ -168,4 +172,19 @@ def main():
                     autopct=make_potato(labels2),
                     startangle=90
                 )
-                axs
+                axs[1].set_title("과목별 공부 시간 비율")
+                axs[1].axis('equal')
+            else:
+                axs[1].set_title("과목 비율 정보를 입력하세요.")
+
+            plt.tight_layout()
+            st.pyplot(fig) 
+            
+        except ZeroDivisionError:
+            st.error("목표 시간이 0분입니다.")
+        except Exception as e:
+            st.error(f"오류가 발생했습니다: {e}")
+
+# Streamlit 앱 실행 시작점
+if __name__ == '__main__':
+    main()
