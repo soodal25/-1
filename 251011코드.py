@@ -160,8 +160,10 @@ if goal_sec > 0:
                 labels=labels2,
                 autopct="%1.1f%%",
                 startangle=90,
+                colors=colors_goal,
                 textprops={'fontproperties': fm.FontProperties(fname=font_path) if font_path else None}
             )
+            colors_goal = ["#B2CCFF", "#FAED7D"] 
             axs[1].set_title(
     "과목별 공부 비율",
     fontproperties=title_font,
@@ -179,6 +181,7 @@ if goal_sec > 0:
         st.error("목표 시간이 0분입니다.")
     except Exception as e:
         st.error(f"오류가 발생했습니다: {e}")
+
 
 
 
