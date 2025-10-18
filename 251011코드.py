@@ -8,13 +8,22 @@ import matplotlib as mpl
 import os
 import matplotlib.font_manager as fm
 import matplotlib.pyplot as plt
+import platform
 
 
-plt.rcParams['font.family'] = 'Malgun Gothic'  # Windows의 맑은 고딕
-plt.rcParams['axes.unicode_minus'] = False  # 마이너스 기호 깨짐 방지
+os = platform.system()
 
-	 
+# Windows
+if os == 'Windows':
+    plt.rc('font', family= 'Malgun Gothic')
 
+# Mac
+elif os == 'Darwin':
+    plt.rc('font', family= 'AppleGothic')
+
+# Linux
+elif os == 'Linux':
+    plt.rc('font', family= 'NanumGothic')
 if 'running' not in st.session_state:
     st.session_state.running = False
 if 'start_time' not in st.session_state:
@@ -164,6 +173,7 @@ if goal_sec > 0:
         st.error("목표 시간이 0분입니다.")
     except Exception as e:
         st.error(f"오류가 발생했습니다: {e}")
+
 
 
 
