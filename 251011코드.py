@@ -10,7 +10,9 @@ import matplotlib.font_manager as fm
 import matplotlib.pyplot as plt
 import platform
 
-plt.rcParams['font.family'] = 'Malgun Gothic'
+font_name = 'Malgun Gothic'
+font_path = fm.findfont(fm.FontProperties(family=font_name))
+
 def start_stop_timer():
     try:
         # 'daily_goal'이 세션 상태에 있으면 변환하고, 없으면 0으로 설정
@@ -153,6 +155,7 @@ if goal_sec > 0:
         st.error("목표 시간이 0분입니다.")
     except Exception as e:
         st.error(f"오류가 발생했습니다: {e}")
+
 
 
 
