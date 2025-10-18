@@ -8,6 +8,7 @@ import matplotlib as mpl
 import os
 import matplotlib.font_manager as fm
 import platform
+from matplotlib import rc
 
 @st.cache_data
 def fontRegistered():
@@ -188,5 +189,6 @@ def main():
 # Streamlit 앱 실행 시작점
 if __name__ == '__main__':
     main()
+
 
 
