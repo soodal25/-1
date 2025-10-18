@@ -1,4 +1,4 @@
-
+import streamlit as st
 import time
 import pandas as pd
 import numpy as np
@@ -154,6 +154,7 @@ if goal_sec > 0:
         st.error("목표 시간이 0분입니다.")
     except Exception as e:
         st.error(f"오류가 발생했습니다: {e}")
+
 
 
 
